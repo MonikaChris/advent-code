@@ -88,11 +88,8 @@ def processCords(coords):
     res += grid[r][c]
   return int(res)
 
-
 def isNum(char):
   return (ord("0") <= ord(char) <= ord("9"))
-
-
 
 
 if __name__ == "__main__":
