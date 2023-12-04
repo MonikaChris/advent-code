@@ -29,6 +29,18 @@ SYMBOLS = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '=', '/']
 
 visited = set()
 
+# Main function for part 2
+def getGearNum(grid):
+  res = 0
+  for r in range(ROWS):
+    for c in range(COLS):
+      if grid[r][c] in SYMBOLS:
+        nums = getAdjNums(r,c)
+        if len(nums) == 2:
+          res += nums[0] * nums[1]
+  return res
+
+# Main function for part 1
 def getPartNums(grid):
   res = 0
   for r in range(ROWS):
@@ -84,9 +96,11 @@ def isNum(char):
 
 
 if __name__ == "__main__":
-  total = getPartNums(grid)
-  print(total)
+  # total = getPartNums(grid)
+  # print(total)
 
+  total2 = getGearNum(grid)
+  print(total2)
   
   # total2 = getPartNums(grid)
   # print(total2)
