@@ -4,8 +4,13 @@ with open('Day6/data.txt', 'r') as file:
   lines = file.readlines()
 lines = [line.strip() for line in lines]
 
-times = [int(num) for num in lines[0].split()[1:]]
-dists = [int(num) for num in lines[1].split()[1:]]
+# Part 1 data
+times1 = [int(num) for num in lines[0].split()[1:]]
+dists1 = [int(num) for num in lines[1].split()[1:]]
+
+# Part 2 data
+times2 = [int("".join(line for line in lines[0].split()[1:]))]
+dists2 = [int("".join(line for line in lines[1].split()[1:]))]
 
 # d = vt
 # parameter x
@@ -15,7 +20,7 @@ dists = [int(num) for num in lines[1].split()[1:]]
 # range: btwn root1 and root2, non-inclusive, round to whole numbers
 
 
-def main():
+def main(times, dists):
   res = 1
   for i in range(len(times)):
     a = -1
@@ -49,8 +54,15 @@ def quad_formula(a, b, c):
 
 
 if __name__ == "__main__":
-  print(main())
+  # Part 1
+  print(main(times1, dists1))
+
+  # Part 2
+  print(main(times2, dists2))
   
   # print(quad_formula(-1, 15, -40))
   # print(quad_formula(-1, 7, -9))
   # print(quad_formula(-1, 30, -200))
+
+  
+  
