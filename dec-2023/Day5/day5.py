@@ -11,8 +11,8 @@ lst_of_maps = ["seed-to-soil map:",
               "humidity-to-location map:"
               ]
 
-def get_locations():
-  seeds = almanac["seeds"]
+
+def get_locations(seeds):
   locations = []
   for seed in seeds:
     locations.append(transform(int(seed)))
@@ -33,9 +33,6 @@ def transform(seed):
 
 
 if __name__ == "__main__":
-  total = get_locations()
+  total = get_locations(almanac["seeds"])
   print(total)
-
-  # print(almanac["seed-to-soil map:"])
-  # print(almanac)
  
