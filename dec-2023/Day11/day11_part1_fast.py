@@ -1,6 +1,4 @@
-# Slow Part 1 Solution using BFS grid search
-
-from collections import deque
+# Fast Part 1 Solution using coordinate math
 
 test_uni = [
   ['.', '.', '.', '#', '.', '.', '.', '.', '.', '.'], 
@@ -95,40 +93,20 @@ def get_paths_sum(start, end, coords, uni):
   paths = []
 
   for i in range(start + 1, end + 1):
-    paths.append(get_paths(coords[start], str(i), uni))
+    paths.append(get_path(start, i, coords, uni))
   return sum(paths)
 
 
-def get_paths(coords, end, uni):
-  ROWS = len(uni)
-  COLS = len(uni[0])
-  r = coords[0]
-  c = coords[1]
-  visited = set()
-  q = deque()
-  q.append((r, c))
-  visited.add((r, c))
+def get_path(start, end, coords, uni):
+  sr = coords[start][0]
+  sc = coords[start][1]
+  er = coords[end][0]
+  ec = coords[end][1]
 
-  length = 0
-  while q:
-    for i in range(len(q)):
-      r, c = q.popleft()
-      if uni[r][c] == end:
-        return length
-
-      directions = [[1, 0], [0, 1], [0, -1]]
-      for dr, dc in directions:
-        if (r + dr >= 0 and r + dr < ROWS and
-            c + dc >= 0 and c + dc < COLS and
-            (r + dr, c + dc) not in visited):
-          q.append((r + dr, c + dc))
-          visited.add((r + dr, c + dc))
-    length += 1
+  return abs(sr - er) + abs(sc - ec)
   
   
 
 if __name__ == "__main__":
   print(main(universe))
-  # sub_nums(universe)
-  # expand_uni(universe)
-  # print(universe)
+  
