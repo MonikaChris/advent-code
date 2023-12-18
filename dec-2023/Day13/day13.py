@@ -49,7 +49,6 @@ for line in lines:
 if pattern:
   patterns.append(pattern)
 
-count = [0]
 
 def main(patterns):
   res = 0
@@ -61,10 +60,8 @@ def main(patterns):
 def get_reflection(pattern):
   cols = get_cols(pattern)
   if cols:
-    count[0] += 1
     return cols
   else:
-    count[0] += 1
     return get_rows(pattern) * 100
 
 
