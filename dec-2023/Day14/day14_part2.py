@@ -213,5 +213,5 @@ def count_weighted_rows(grid):
 
 
 if __name__ == "__main__":
-  print(main(lines, 1000))
+  print(main(lines, 1000000000))
   # print(lines)
