@@ -7,18 +7,13 @@ lines = [line.strip() for line in lines]
 with open('Day16/test.txt', 'r') as file:
   test = file.readlines()
 test = [line.strip() for line in test]
- 
-# [
-# ['.', 'X', '.', '.', '.', '\', '.', '.', '.', '.'], 
-# ['|', 'X', '-', '.', '\', '.', '.', '.', '.', '.'], 
-# ['.', 'X', '.', '.', '.', '|', '-', '.', '.', '.'], 
-# ['.', 'X', '.', '.', '.', '.', '.', '.', '|', '.'], 
-# ['.', 'X', '.', '.', '.', '.', '.', '.', '.', '.'], 
-# ['.', 'X', '.', '.', '.', '.', '.', '.', '.', '\'], 
-# ['.', 'X', '.', '.', 'X', 'X', 'X', 'X', '.', '.'], 
-# ['X', 'X', 'X', 'X', 'X', '.', 'X', 'X', '.', '.'], 
-# ['.', 'X', 'X', 'X', 'X', 'X', 'X', 'X', '.', '\\'], 
-# ['.', 'X', '/', '/', '.', '|', '.', 'X', '.', '.']]
+
+with open('Day16/test3.txt', 'r') as file:
+  test3 = file.readlines()
+test3 = [line.strip() for line in test3]
+
+
+
 
 MIRROR_R = {
   (0, -1) : [(-1, 0)],
@@ -63,22 +58,26 @@ def main(grid, grid2):
   visited = set()
   q = deque()
   q.append([(0, 0), (0, 1)])
-  energized.update([(0, 0), (0, 1)])
+  energized.add((0, 0))
 
   while q:
     prev, cur = q.popleft()
+    # print(f'cur: {cur}')
     energized.add(cur)
     visited.add((prev, cur))
     grid2[cur[0]][cur[1]] = "X"
     cells = get_next(grid, prev, cur)
 
     if cells:
+      # cell: (new_prev, new_cur) where new_prev is old cur
       for cell in cells:
-        if cell[1][0] >= 0 and cell[1][0] < ROWS and cell[1][1] >= 0 and cell[1][1] <= COLS and tuple(cell) not in visited:
+        if tuple(cell) not in visited:
           q.append(cell)
 
-    print(q)
-  # print(grid2)
+    # print(q)
+  for line in grid2:
+    print("".join(line))
+  # print(energized)
   return len(energized)
 
 def get_next(grid, prev, cur):
@@ -88,9 +87,6 @@ def get_next(grid, prev, cur):
   pc = prev[1]
   cr = cur[0]
   cc = cur[1]
-
-  if cr < 0 or cr >= ROWS or cc < 0 or cc >= COLS:
-    return
 
   found = None
   
@@ -112,13 +108,15 @@ def get_next(grid, prev, cur):
   if found:
     res = []
     for val in found:
-      if cr + val[0] < ROWS and cc + val[1] < COLS:
+      if cr + val[0] >= 0 and cr + val[0] < ROWS and cc + val[1] >= 0 and cc + val[1] < COLS:
         res.append([(cr, cc), (cr + val[0], cc + val[1])])
-    return res
+    return res if len(res) > 0 else None
 
 
 
 
 
 if __name__ == "__main__":
-  print(main(test, test))
+  print(main(test3, test3))
+  # print(len(lines))
+  # print(len(lines[0]))
