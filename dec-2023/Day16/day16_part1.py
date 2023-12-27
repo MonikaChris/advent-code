@@ -52,8 +52,8 @@ def main(grid):
   energized = set()
   visited = set()
   q = deque()
-  q.append([(0, 0), (0, 1)])
-  energized.add((0, 0))
+  q.append([(0, -1), (0, 0)])
+  visited.add(tuple([(0, -1), (0, 0)]))
 
   while q:
     prev, cur = q.popleft()
@@ -66,6 +66,7 @@ def main(grid):
       for cell in cells:
         if tuple(cell) not in visited:
           q.append(cell)
+          visited.add(tuple(cell))
   return len(energized)
 
 def get_next(grid, prev, cur):
