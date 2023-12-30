@@ -7,6 +7,10 @@ with open('Day17/test.txt', 'r') as file:
   test = file.readlines()
 test = [[int(char) for char in list(line.strip())] for line in test]
 
+with open('Day17/test2.txt', 'r') as file:
+  test2 = file.readlines()
+test2 = [[int(char) for char in list(line.strip())] for line in test2]
+
 dirs = {
   "N" : (-1, 0),
   "S" : (1, 0),
@@ -28,14 +32,15 @@ def main(grid):
       res[0] = min(res[0], weight)
       return
 
-    visited.add((r, c))
+    new_visited = visited.copy()
+    new_visited.add((r, c))
 
     for dir in dirs.keys():
       if d != dir:
-        dfs(r + dirs[dir][0], c + dirs[dir][1], 1, dir, weight + grid[r][c], visited)
+        dfs(r + dirs[dir][0], c + dirs[dir][1], 1, dir, weight + grid[r][c], new_visited)
 
       if d == dir and s < 3:
-        dfs(r + dirs[dir][0], c + dirs[dir][1], s + 1, dir, weight + grid[r][c], visited)
+        dfs(r + dirs[dir][0], c + dirs[dir][1], s + 1, dir, weight + grid[r][c], new_visited)
   
     return
 
@@ -45,5 +50,5 @@ def main(grid):
 
 
 if __name__ == "__main__":
-  print(main(test))
+  print(main(test2))
   
