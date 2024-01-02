@@ -1,3 +1,5 @@
+import heapq
+
 with open('Day17/data.txt', 'r') as file:
   lines = file.readlines()
 lines = [[int(char) for char in list(line.strip())] for line in lines]
@@ -7,10 +9,6 @@ with open('Day17/test.txt', 'r') as file:
   test = file.readlines()
 test = [[int(char) for char in list(line.strip())] for line in test]
 
-with open('Day17/test2.txt', 'r') as file:
-  test2 = file.readlines()
-test2 = [[int(char) for char in list(line.strip())] for line in test2]
-
 dirs = {
   "N" : (-1, 0),
   "S" : (1, 0),
@@ -18,37 +16,62 @@ dirs = {
   "W" : (0, -1)
 }
 
+opp = {
+  "N" : "S",
+  "S" : "N",
+  "E" : "W",
+  "W" : "E"
+}
 
 def main(grid):
   ROWS = len(grid)
   COLS = len(grid[0])
-  res = [float("inf")]
+  pq = [] #(cost, (r, c, d, s)) - row, col, direction, step
+  heapq.heappush(pq, (grid[0][1], (0, 1, "E", 1)))
+  heapq.heappush(pq, (grid[1][0], (1, 0, "S", 1)))
+  cost = {}
+  cost[(0, 1, "E", 1)] = grid[0][1]
+  cost[(1, 0, "S", 1)] = grid[1][0]
+  path = {}
+  path[(0, 1, "E", 1)] = None
+  path[(1, 0, "S", 1)] = None
 
-  def dfs(r, c, s, d, weight, visited): # row, col, step_count, direction, weight, visited
-    if r < 0 or r >= ROWS or c < 0 or c >= COLS or (r, c) in visited:
-      return
-    
+  while pq:
+    cur_cost, (r, c, d, s) = heapq.heappop(pq)
+
     if r == ROWS - 1 and c == COLS - 1:
-      res[0] = min(res[0], weight)
-      return
+      # Check path - for troubleshooting
+      # cur = path[(r, c, d, s)]
+      # cur_path = []
+      # while cur:
+      #   cur_path.append(cur)
+      #   cur = path[cur]
+      # cur_path.reverse()
+      # print(cur_path)
+      return cur_cost
 
-    new_visited = visited.copy()
-    new_visited.add((r, c))
+    for dir in dirs:
+      dr, dc = r + dirs[dir][0], c + dirs[dir][1]
 
-    for dir in dirs.keys():
-      if d != dir:
-        dfs(r + dirs[dir][0], c + dirs[dir][1], 1, dir, weight + grid[r][c], new_visited)
+      if 0 <= dr < ROWS and 0 <= dc < COLS:
+        new_cost = cur_cost + grid[dr][dc]
+        
+        # New direction
+        if d != dir and dir != opp[d]:
+          if (dr, dc, dir, 1) not in cost or cost[(dr, dc, dir, 1)] > new_cost:
+            heapq.heappush(pq, (new_cost, (dr, dc, dir, 1)))
+            cost[(dr, dc, dir, 1)] = new_cost
+            path[(dr, dc, dir, 1)] = (r, c, d, s)
+    
+        # Same direction
+        if d == dir and s < 3 and dir != opp[d]:
+          if (dr, dc, dir, s + 1) not in cost or cost[(dr, dc, dir, s + 1)] > new_cost:
+            heapq.heappush(pq, (new_cost, (dr, dc, dir, s + 1)))
+            cost[(dr, dc, dir, s + 1)] = new_cost
+            path[(dr, dc, dir, s + 1)] = (r, c, d, s)
 
-      if d == dir and s < 3:
-        dfs(r + dirs[dir][0], c + dirs[dir][1], s + 1, dir, weight + grid[r][c], new_visited)
-  
-    return
 
-  dfs(0, 1, 1, "E", 0, set())
-  dfs(1, 0, 1, "S", 0, set())
-  return res[0]
 
 
 if __name__ == "__main__":
-  print(main(test2))
-  
+  print(main(lines))
