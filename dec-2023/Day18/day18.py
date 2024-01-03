@@ -73,38 +73,39 @@ def mark_path(lst):
 def flood(grid):
   ROWS = len(grid)
   COLS = len(grid[0])
-  visited = set()
+  
+  for r in range(ROWS):
+    dfs(grid, r, 0)
 
   for r in range(ROWS):
-    dfs(grid, r, 0, visited)
-
-  for r in range(ROWS):
-    dfs(grid, r, COLS - 1, visited)
+    dfs(grid, r, COLS - 1)
 
   for c in range(COLS):
-    dfs(grid, 0, c, visited)
+    dfs(grid, 0, c)
   
   for c in range(COLS):
-    dfs(grid, ROWS - 1, c, visited)
+    dfs(grid, ROWS - 1, c)
 
   return grid
 
 
-def dfs(grid, r, c, visited):
+def dfs(grid, r, c):
   ROWS = len(grid)
   COLS = len(grid[0])
+  stack = [(r, c)]
 
-  if (r < 0 or r >= ROWS or
-      c < 0 or c >= COLS or
-      (r, c) in visited or
-      grid[r][c] != '.'):
-      return
+  while stack:
+    r, c = stack.pop()
+    if (r < 0 or r >= ROWS or
+        c < 0 or c >= COLS or
+        grid[r][c] != '.'):
+        continue
 
-  grid[r][c] = "O"
-  
-  for d in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-    dr, dc = r + d[0], c + d[1]
-    dfs(grid, dr, dc, visited)
+    grid[r][c] = "O"
+    
+    for d in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+      dr, dc = r + d[0], c + d[1]
+      stack.append((dr, dc))
 
   return grid
 
