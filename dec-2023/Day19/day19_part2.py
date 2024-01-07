@@ -39,6 +39,7 @@ def get_all_flows(maps):
   res = []
   
   def dfs(maps, next, i, cur_path):
+    #Finds all x, m, a, s ranges that lead to A
     
     if next not in maps:
       if next == "A":
