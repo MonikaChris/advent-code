@@ -2,6 +2,7 @@ from nodes import Mod, Flipflop, Conjunction
 from collections import deque
 
 def get_node_map(filename):
+  #Returns node_map: { %name : [name, name, ...]}
   with open(f'Day20/{filename}', 'r') as file:
     lines = file.readlines()
 
@@ -14,12 +15,14 @@ def get_node_map(filename):
 
 
 def get_nodes(node_map):
+  #Returns nodes: { name : node } 
   node_types = {'%': Flipflop, '&': Conjunction}
   nodes = {}
   for node, neighbors in node_map.items():
     if node[0] in node_types:
       nodes[node[1:]] = (node_types[node[0]](node[1:]))
     
+    #Adds childless nodes with no type
     for neigh in neighbors:
       if neigh not in nodes:
         new_node = Mod(neigh)
@@ -28,6 +31,7 @@ def get_nodes(node_map):
 
 
 def get_adj_lst(nodes, node_map):
+  #Returns adj_lst: { name : [node, node, ...]}
   adj_lst = {}
   for node, neighbors in node_map.items():
     if node == "broadcaster":
@@ -38,35 +42,40 @@ def get_adj_lst(nodes, node_map):
   return adj_lst
 
 
+def set_conjunction_node_memory(adj_lst, node_map, nodes):
+  for node in node_map.keys():
+    if node != "broadcaster":
+      for neigh in adj_lst[nodes[node[1:]]]:
+        if type(neigh) == Conjunction:
+          neigh.add_input_node(nodes[node[1:]])
+
+
 def bfs_pulse(adj_lst, node_map, nodes): # adj_lst: {node: [node, node]} ; node_map: {'%name' : ['name', 'name']} ; nodes: {'name' : node}
   counts = {'LOW' : 1, 'HIGH' : 0}
   q = deque()
-  q.append(([nodes[node] for node in node_map['broadcaster']], 'LOW')) #([current_nodes], pulse)
+  q.append(('broadcaster', [nodes[node] for node in node_map['broadcaster']], 'LOW')) #(prev_node, [current_nodes], pulse)
   
   while q:
-    node_group, pulse = q.popleft()
+    prev, node_group, pulse = q.popleft()
     
     #First process each pulse in group
     for node in node_group:
-      node.pulse_in(pulse)
-      # print(pulse)
+      node.pulse_in(prev, pulse)
       counts[pulse] += 1
 
     #Then propagate additional pulses
     for node in node_group:
       pulse = node.pulse_out()
       if pulse:
-        q.append((adj_lst[node], pulse))
+        q.append((node, adj_lst[node], pulse))
   return counts['LOW'], counts['HIGH']
 
 
 def main(filename, button_presses):
   node_map = get_node_map(filename)
-  # print(node_map)
   nodes = get_nodes(node_map)
-  # print(nodes)
   adj_lst = get_adj_lst(nodes, node_map)
-  # print(adj_lst)
+  set_conjunction_node_memory(adj_lst, node_map, nodes)
 
   low = 0
   high = 0
@@ -79,7 +88,7 @@ def main(filename, button_presses):
 
 
 if __name__ == "__main__":
-  print(main('test2.txt', 1000))
+  print(main('data.txt', 1000))
     
 
 
