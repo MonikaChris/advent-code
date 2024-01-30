@@ -15,13 +15,13 @@ class Flipflop(Mod):
   Incoming high pulse ignored.
   Incoming low pulse toggles state.
   If off and receives low pulse, turns on and sends high pulse.
-  If on and receives low pulse, turns off and sends high pulse.
+  If on and receives low pulse, turns off and sends low pulse.
   Initial state: off
   '''
   def __init__(self, name):
     super().__init__(name)
     self.state = "OFF"
-    self.pulse = "HIGH"
+    self.output_pulse = "HIGH"
 
   def toggle_state(self):
     self.state = "OFF" if self.state == "ON" else "ON"
@@ -29,13 +29,12 @@ class Flipflop(Mod):
   def pulse_in(self, node, pulse):
     if pulse == "LOW":
       self.toggle_state()
-    self.pulse = pulse
+      self.output_pulse = "HIGH" if self.state == "ON" else "LOW"
+    else:
+      self.output_pulse = None
 
   def pulse_out(self):
-    if self.state == "ON" and self.pulse == "LOW":
-      return "HIGH"
-    if self.state == "OFF" and self.pulse == "LOW":
-      return "LOW"
+    return self.output_pulse
     
 
 class Conjunction(Mod):
