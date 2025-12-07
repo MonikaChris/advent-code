@@ -1,0 +1,28 @@
+# Python files
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+build/
+dist/
+
+# Virtual environment folders
+venv/
+.env/
+.venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VS Code workspace settings
+.vscode/
+
+# macOS metadata files
+.DS_Store
+
+# Advent of Code Inputs
+dec-20**/**/data.txt
+
+# Logs, temp files
+*.log
+*.tmp
